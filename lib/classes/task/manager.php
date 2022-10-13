@@ -549,7 +549,7 @@ class manager {
             if (count($qos) >= (4 * count($limits))) {
                 $move *= 2;
             }
-        } while ($shuffled > 0);
+        } while ($shuffled > 0 && count($qos) < 2000);
 
         return $qos;
     }
@@ -569,7 +569,7 @@ class manager {
 
         $where = '(nextruntime IS NULL OR nextruntime < :timestart1)';
         $params = array('timestart1' => $timestart);
-        $records = $DB->get_records_select('task_adhoc', $where, $params, 'nextruntime ASC, id ASC', '*', 0, 2000);
+        $records = $DB->get_records_select('task_adhoc', $where, $params, 'nextruntime ASC, id ASC');
         $records = self::ensure_adhoc_task_qos($records);
 
         $cronlockfactory = \core\lock\lock_config::get_lock_factory('cron');
